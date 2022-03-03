@@ -1,9 +1,11 @@
 package mvh.util;
 
+import mvh.enums.WeaponType;
+import mvh.world.Hero;
+import mvh.world.Monster;
 import mvh.world.World;
 
 import java.io.*;
-import java.util.Arrays;
 
 /**
  * Class to assist reading in world file
@@ -12,7 +14,7 @@ import java.util.Arrays;
  */
 public final class Reader {
     public static World loadWorld(File fileWorld){
-        //TODO Don't need to check with conditionals, already handled
+        World world = null;
         if(fileWorld.isFile() && fileWorld.canRead() && fileWorld.exists()){
             //Try and Catch Block for reading from file (With-resources)
             try(FileReader fileReader = new FileReader(fileWorld);
@@ -21,6 +23,8 @@ public final class Reader {
                 //Reading from File
                 int rowCount = Integer.parseInt(bufferedReader.readLine());
                 int columnCount = Integer.parseInt(bufferedReader.readLine());
+                //Creating a world object
+                world = new World(rowCount, columnCount);
                 String line = bufferedReader.readLine();
                 //Looping for "following" lines
                 for(int linesRead = 0; linesRead < rowCount * columnCount;linesRead++){
@@ -35,9 +39,31 @@ public final class Reader {
                             System.out.println();
                         }
                         //Conditional for handling non-floor entities in row, column
-                        else if(lineInfo.length > 1)
+                        if(lineInfo.length > 2)
                         {
-                            System.out.println();
+                            //Initializing info common between Entities
+                            int row = Integer.parseInt(lineInfo[0]);
+                            int column = Integer.parseInt(lineInfo[1]);
+                            int entityHealth = Integer.parseInt(lineInfo[4]);
+                            char entitySymbol = lineInfo[3].charAt(0);
+                            //Creating entity dependent on type
+                            if(lineInfo[2].equals("MONSTER"))
+                            {
+                                //Creating variables as current Entity would be of type Monster
+                                char weaponSymbol = lineInfo[5].charAt(0);
+                                Monster monster = new Monster(entityHealth, entitySymbol, WeaponType.getWeaponType(weaponSymbol));
+                                //Adding entity onto the current world
+                                world.addEntity(row, column, monster);
+                            }
+                            else if(lineInfo[2].equals("HERO"))
+                            {
+                                //Creating variables as current Entity would be of type Hero
+                                int weaponStrength = Integer.parseInt(lineInfo[5]);
+                                int armorStrength = Integer.parseInt(lineInfo[6]);
+                                Hero hero = new Hero(entityHealth, entitySymbol, weaponStrength, armorStrength);
+                                //Adding entity onto the world
+                                world.addEntity(row, column, hero);
+                            }
                         }
                         line = bufferedReader.readLine();
                     }
@@ -52,6 +78,6 @@ public final class Reader {
                 System.exit(1);
             }
         }
-        return null;
+        return world;
     }
 }
