@@ -32,12 +32,6 @@ public final class Reader {
                     if(line != null){
                         //Reading and splitting a line
                         String[] lineInfo = line.split(",");
-                        System.out.println(Arrays.toString(lineInfo));
-                        //Conditional for handling floors
-                        if(lineInfo.length == 1)
-                        {
-                            System.out.println();
-                        }
                         //Conditional for handling non-floor entities in row, column
                         if(lineInfo.length > 2)
                         {
