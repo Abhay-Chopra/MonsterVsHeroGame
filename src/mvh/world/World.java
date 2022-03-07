@@ -306,7 +306,7 @@ public class World {
     public String gameString(){
         //Getting the World Map
         String worldMapString = String.format("%s", worldString());
-        String header = "NAME \tS\tH\tSTATE\tINFO\n";
+        String header = "NAME   \tS\tH\tSTATE\tINFO";
         StringBuilder worldInfo = new StringBuilder();
         //Looping through entities ArrayList
         for (Entity entity:entities)
@@ -314,18 +314,18 @@ public class World {
             String entityInfo = entity.toString();
             //TODO Ask about String Builder versus +=
             //Adding on all info onto the worldInfo String
-            worldInfo.append(String.format("%s", entityInfo));
+            worldInfo.append(String.format("\n%s", entityInfo));
         }
-        return String.format("%s%s%s", worldMapString, header, worldInfo);
+        return String.format("%s%s%s\n", worldMapString, header, worldInfo);
     }
 
     public String worldString(){
-        StringBuilder wallWidth = new StringBuilder();
+        StringBuilder wall = new StringBuilder();
         int rowLength = this.world.length;
         int columnLength = this.world[0].length;
         //TODO Ask about code readability
         //Added two to the length of one row, to get the top and bottom wall
-        wallWidth.append(String.valueOf(Symbol.WALL.getSymbol()).repeat(columnLength + 2));
+        wall.append(String.valueOf(Symbol.WALL.getSymbol()).repeat(columnLength + 2));
         StringBuilder innerMap = new StringBuilder();
         for(int row = 0; row < rowLength; row++)
         {
