@@ -71,7 +71,37 @@ public final class Hero extends Entity{
 
     @Override
     public Direction chooseMove(World local) {
-        return null;
+        //TODO Error checking for world size & whether we need to reconfirm no monsters immediately around
+        //Getting hero location (local world)
+        int heroRowLocation = 2;
+        int heroColumnLocation = 2;
+        //Looping through local world to see if any alive monsters
+        for (int row = 0; row < 5; row++) {
+            for (int column = 0; column < 5; column++) {
+                if(local.isMonster(row, column) && local.canBeAttacked(row, column)){
+                    Direction[] directions = Direction.getDirections(row - heroRowLocation,column - heroColumnLocation);
+                    for (Direction direction:directions) {
+                        if(local.canMoveOnTopOf(heroRowLocation, heroColumnLocation, direction)){
+                            return direction;
+                        }
+                    }
+                }
+            }
+        }
+        //Handling other cases (when no monster alive)
+        Direction randomDirection = Direction.getRandomDirection();
+        //Checking if hero can move North-East
+        if(local.canMoveOnTopOf(heroRowLocation, heroColumnLocation, Direction.NORTHEAST)){
+            return Direction.NORTHEAST;
+        }
+        //Checking if hero can move in some random direction
+        else if(local.canMoveOnTopOf(heroRowLocation, heroColumnLocation, randomDirection)){
+            return randomDirection;
+        }
+        //When no other direction to move to, hero stays at current location
+        else{
+            return Direction.STAY;
+        }
     }
 
     /**
