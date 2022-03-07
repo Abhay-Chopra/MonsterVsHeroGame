@@ -341,7 +341,16 @@ public class World {
                 //Handling Dead Entities
                 else if(getEntity(row, column).isDead())
                 {
-                    innerMap.append(Symbol.DEAD.getSymbol());
+                    //Handling Non-Walls
+                    if(getEntity(row, column).canMoveOnTopOf())
+                    {
+                        innerMap.append(Symbol.DEAD.getSymbol());
+                    }
+                    //Handling Walls
+                    else
+                    {
+                        innerMap.append(Wall.getWall().getSymbol());
+                    }
                 }
                 //Handling Alive Entities
                 else if(getEntity(row, column).isAlive())
@@ -352,7 +361,7 @@ public class World {
             //Right Wall in Row
             innerMap.append(Symbol.WALL.getSymbol()).append("\n");
         }
-        return String.format("%s\n%s\n%s", wallWidth, innerMap, wallWidth);
+        return String.format("%s\n%s%s\n", wall, innerMap, wall);
     }
     World getLocal(int moveWorldSize, int row, int column) {
         return null;
