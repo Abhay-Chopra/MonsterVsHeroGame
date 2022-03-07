@@ -52,14 +52,16 @@ public final class Hero extends Entity{
 
     @Override
     public Direction attackWhere(World local) {
+        int heroRowLocation = 1;
+        int heroColumnLocation = 1;
         //TODO Ask if we need to throw error if not 3x3 world and whether we can hard code in locations
         //Looping through rows and columns and scanning if there is a location that can be attacked
-        for (int row = 0; row <= 2; row++) {
-            for (int column = 0; column <= 2; column++) {
+        for (int row = 0; row < 3; row++) {
+            for (int column = 0; column < 3; column++) {
                 //conditional to confirm current searched location has a monster, and it is alive
                 if(local.canBeAttacked(row, column) && local.isMonster(row, column))
                 {
-                    return Direction.getDirection(row - 1, column - 1);
+                    return Direction.getDirection(row - heroRowLocation, column - heroColumnLocation);
                 }
             }
         }
