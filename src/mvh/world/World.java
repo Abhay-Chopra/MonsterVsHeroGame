@@ -364,6 +364,33 @@ public class World {
         return String.format("%s\n%s%s\n", wall, innerMap, wall);
     }
     World getLocal(int moveWorldSize, int row, int column) {
-        return null;
+        //row,column are used to indicate where the grid should be centred.
+        if(moveWorldSize % 2 != 1){
+            try {
+                throw new Exception("Invalid function parameter");
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.err.println("Parameter moveWorldSize: " + moveWorldSize + " should be an odd number!");
+                System.exit(1);
+            }
+        }
+        World localWorld = new World(moveWorldSize, moveWorldSize);
+        //TODO Add commenting here
+        int entityLocation = Math.floorDiv(moveWorldSize, 2);
+        for (int currentRow = row - entityLocation, localWorldRow = 0; currentRow <= row + entityLocation; currentRow++, localWorldRow++) {
+            for (int currentColumn = column - entityLocation, localWorldColumn = 0; currentColumn <= column + entityLocation; currentColumn++, localWorldColumn++) {
+                try {
+                    //Handling only actual entities
+                    if(getEntity(currentRow, currentColumn) != null){
+                        localWorld.addEntity(localWorldRow, localWorldColumn, getEntity(currentRow, currentColumn));
+                    }
+                }
+                //Creating walls for locations outside of world
+                catch (IndexOutOfBoundsException e) {
+                    localWorld.addEntity(localWorldRow, localWorldColumn, Wall.getWall());
+                }
+            }
+        }
+        return localWorld;
     }
 }
