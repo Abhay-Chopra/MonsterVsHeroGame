@@ -50,15 +50,19 @@ public final class Hero extends Entity{
         return armorStrength;
     }
 
+    /**
+     * Choosing where the Hero should attack given a localized view of the hero's surroundings (3x3)
+     * @param local The local view of the entity (immediate neighbors 3x3)
+     * @return Direction where and when a valid attack is possible, otherwise returns null
+     */
     @Override
     public Direction attackWhere(World local) {
         int heroRowLocation = 1;
         int heroColumnLocation = 1;
-        //TODO Ask if we need to throw error if not 3x3 world and whether we can hard code in locations
         //Looping through rows and columns and scanning if there is a location that can be attacked
         for (int row = 0; row < 3; row++) {
             for (int column = 0; column < 3; column++) {
-                //conditional to confirm current searched location has a monster, and it is alive
+                //conditional to confirm current searched location has a monster, and it is alive (ie, attack-able)
                 if(local.canBeAttacked(row, column) && local.isMonster(row, column))
                 {
                     return Direction.getDirection(row - heroRowLocation, column - heroColumnLocation);
@@ -69,9 +73,14 @@ public final class Hero extends Entity{
         return null;
     }
 
+    /**
+     * Choosing where the Hero should move given a localized view of the world (5x5)
+     * @param local The local view of the entity
+     * @return Direction to move to when a valid position is open and not a blocked path, otherwise, in the worst case
+     * scenario => returns the Staying position,ie, staying at the same location
+     */
     @Override
     public Direction chooseMove(World local) {
-        //TODO Error checking for world size & whether we need to reconfirm no monsters immediately around
         //Getting hero location (local world)
         int heroRowLocation = 2;
         int heroColumnLocation = 2;
@@ -81,6 +90,7 @@ public final class Hero extends Entity{
                 if(local.isMonster(row, column) && local.canBeAttacked(row, column)){
                     Direction[] directions = Direction.getDirections(row - heroRowLocation,column - heroColumnLocation);
                     for (Direction direction:directions) {
+                        //Confirming we can move onto the location
                         if(local.canMoveOnTopOf(heroRowLocation, heroColumnLocation, direction)){
                             return direction;
                         }
