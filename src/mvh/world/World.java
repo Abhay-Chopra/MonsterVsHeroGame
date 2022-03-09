@@ -10,8 +10,10 @@ import java.util.HashMap;
 
 /**
  * A World is a 2D grid of entities, null Spots are floor spots
- * @author Jonathan Hudson
- * @version 1.0
+ * @author Jonathan Hudson, Abhay Chopra
+ * @version 1.1
+ * TA: Amir (Tutorial 06)
+ * Match 8th, 2022
  */
 public class World {
 
@@ -303,6 +305,11 @@ public class World {
         return gameString();
     }
 
+    /**
+     * Creates a string that summarizes all the information of all entities within the world
+     *
+     * @return String that summarizes
+     */
     public String gameString(){
         //Getting the World Map
         String worldMapString = String.format("%s", worldString());
@@ -312,24 +319,27 @@ public class World {
         for (Entity entity:entities)
         {
             String entityInfo = entity.toString();
-            //TODO Ask about String Builder versus +=
             //Adding on all info onto the worldInfo String
             worldInfo.append(String.format("\n%s", entityInfo));
         }
         return String.format("%s%s%s\n", worldMapString, header, worldInfo);
     }
 
+    /**
+     * Creating a string that represents the current world
+     *
+     * @return String that contains a visualization of the world, including all entities represented by symbols
+     */
     public String worldString(){
         StringBuilder wall = new StringBuilder();
         int rowLength = this.world.length;
         int columnLength = this.world[0].length;
-        //TODO Ask about code readability
         //Added two to the length of one row, to get the top and bottom wall
         wall.append(String.valueOf(Symbol.WALL.getSymbol()).repeat(columnLength + 2));
         StringBuilder innerMap = new StringBuilder();
         for(int row = 0; row < rowLength; row++)
         {
-            //Left Wall in Row
+            //Left Wall in Row (Surrounding the left side of the world)
             innerMap.append(Symbol.WALL.getSymbol());
             for (int column = 0; column < columnLength; column++)
             {
@@ -358,27 +368,35 @@ public class World {
                     innerMap.append(getEntity(row, column).getSymbol());
                 }
             }
-            //Right Wall in Row
+            //Right Wall in Row (Surrounding the right side of the world)
             innerMap.append(Symbol.WALL.getSymbol()).append("\n");
         }
         return String.format("%s\n%s%s\n", wall, innerMap, wall);
     }
+    /**
+     * Creates a localized view of the world with all entities
+     *
+     * @param moveWorldSize the size of the local world (must be odd integer)
+     * @param row index, in row, of where the local world should be centered (looking at the 2D world)
+     * @param column index, in column of where the local should be centered (looking at the 2D world)
+     * @return World object that is a localized view of the overall world
+     */
     World getLocal(int moveWorldSize, int row, int column) {
         //row,column are used to indicate where the grid should be centred.
         if(moveWorldSize % 2 != 1){
             try {
                 throw new Exception("Invalid function parameter");
             } catch (Exception e) {
-                e.printStackTrace();
                 System.err.println("Parameter moveWorldSize: " + moveWorldSize + " should be an odd number!");
+                e.printStackTrace();
                 System.exit(1);
             }
         }
         World localWorld = new World(moveWorldSize, moveWorldSize);
-        //TODO Add commenting here
-        int entityLocation = Math.floorDiv(moveWorldSize, 2);
-        for (int currentRow = row - entityLocation, localWorldRow = 0; currentRow <= row + entityLocation; currentRow++, localWorldRow++) {
-            for (int currentColumn = column - entityLocation, localWorldColumn = 0; currentColumn <= column + entityLocation; currentColumn++, localWorldColumn++) {
+        //Getting the amount of spaces from the entity that we are centring the world on till the end of the localized world
+        int mapDifference = Math.floorDiv(moveWorldSize, 2);
+        for (int currentRow = row - mapDifference, localWorldRow = 0; currentRow <= row + mapDifference; currentRow++, localWorldRow++) {
+            for (int currentColumn = column - mapDifference, localWorldColumn = 0; currentColumn <= column + mapDifference; currentColumn++, localWorldColumn++) {
                 try {
                     //Handling only actual entities
                     if(getEntity(currentRow, currentColumn) != null){

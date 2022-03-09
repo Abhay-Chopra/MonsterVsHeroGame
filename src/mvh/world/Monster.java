@@ -5,8 +5,10 @@ import mvh.enums.WeaponType;
 
 /**
  * A Monster is an Entity with a set ARMOR STRENGTH and a user provided WEAPON TYPE
- * @author Jonathan Hudson
- * @version 1.0
+ * @author Jonathan Hudson, Abhay Chopra
+ * @version 1.1
+ * TA: Amir (Tutorial 06)
+ * Date: March 8th, 2022
  */
 public final class Monster extends Entity {
 
@@ -51,9 +53,10 @@ public final class Monster extends Entity {
     }
 
     /**
+     * Choosing where the Monster should attack given a localized view of the hero's surroundings (3x3)
      *
      * @param local The local view of the entity (immediate neighbors 3x3)
-     * @return
+     * @return Direction where and when a valid attack is possible, otherwise returns null
      */
     @Override
     public Direction attackWhere(World local) {
@@ -74,9 +77,11 @@ public final class Monster extends Entity {
     }
 
     /**
+     * Choosing where the Hero should move given a localized view of the world (5x5)
      *
      * @param local The local view of the entity
-     * @return
+     * @return Direction to move to when a valid position is open and not a blocked path, otherwise, in the worst case
+     * scenario => returns the Staying position,ie, staying at the same location
      */
     @Override
     public Direction chooseMove(World local) {
