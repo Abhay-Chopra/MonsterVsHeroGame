@@ -105,9 +105,9 @@ public final class Monster extends Entity {
         }
         //Handling other cases (when no monster alive)
         Direction randomDirection = Direction.getRandomDirection();
-        //Checking if hero can move North-East
-        if(local.canMoveOnTopOf(monsterRowLocation, monsterColumnLocation, Direction.NORTHEAST)){
-            return Direction.NORTHEAST;
+        //Checking if hero can move South-East
+        if(local.canMoveOnTopOf(monsterRowLocation, monsterColumnLocation, Direction.SOUTHEAST)){
+            return Direction.SOUTHEAST;
         }
         //Checking if hero can move in some random direction
         else if(local.canMoveOnTopOf(monsterRowLocation, monsterColumnLocation, randomDirection)){
