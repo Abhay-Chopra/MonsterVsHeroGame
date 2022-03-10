@@ -1,12 +1,15 @@
 package mvh.util;
 
 import mvh.enums.Direction;
+import mvh.enums.WeaponType;
 import mvh.world.Entity;
 import mvh.world.Hero;
+import mvh.world.Monster;
 import mvh.world.World;
 import org.junit.jupiter.api.*;
 
 import java.io.File;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -221,7 +224,9 @@ class MainTest {
      */
     @Test
     void heroMoveDirection(){
-
+        World world = getWorld();
+        //In world, the hero is not close enough to the monster to attack it, thus it should move towards the monster
+        assertEquals(Direction.NORTHWEST, world.getEntity(2,2).chooseMove(world.getLocal(5, 2,2)));
     }
 
     /**
@@ -229,7 +234,14 @@ class MainTest {
      */
     @Test
     void heroStay(){
-
+        World world = getWorldBig();
+        //Moving entities so that entity at the bottom right of the world has all paths obstructed
+        world.moveEntity(4,2, Direction.NORTHEAST);
+        world.moveEntity(4, 1, Direction.EAST);
+        //Adding entity to help block the bottom right entity
+        Hero hero = new Hero(10, 'H', 3, 0);
+        world.addEntity(3,2,hero);
+        assertEquals(Direction.STAY, world.getEntity(4,3).chooseMove(world.getLocal(5, 4,3)));
     }
 
     /**
@@ -237,7 +249,9 @@ class MainTest {
      */
     @Test
     void monsterMoveDirection(){
-
+        World world = getWorld();
+        //In world, the monster is not close enough to the hero to attack it, thus it should move towards the hero
+        assertEquals(Direction.SOUTHEAST, world.getEntity(0,0).chooseMove(world.getLocal(5, 0,0)));
     }
 
     /**
@@ -245,6 +259,15 @@ class MainTest {
      */
     @Test
     void monsterStay(){
-
+        World world = getWorldBig();
+        //Moving entities so that entity at the top left of the world has all paths obstructed
+        world.moveEntity(1,2, Direction.WEST);
+        world.moveEntity(1,1, Direction.WEST);
+        world.moveEntity(0,2, Direction.WEST);
+        //Adding entity to help block the top left entity
+        Monster monster = new Monster(10, 'H', WeaponType.getWeaponType('S'));
+        world.addEntity(1, 1, monster);
+        assertEquals(Direction.STAY, world.getEntity(0,0).chooseMove(world.getLocal(5, 0,0)));
     }
+    //TODO Might need to reconsider the chooseMove tests
 }
