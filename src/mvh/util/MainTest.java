@@ -108,7 +108,9 @@ class MainTest {
      */
     @Test
     void gameString(){
-
+        File file = new File("worldBig.txt");
+        World world = Reader.loadWorld(file);
+        assertEquals(worldString, world.gameString());
     }
 
     /**
@@ -116,7 +118,9 @@ class MainTest {
      */
     @Test
     void worldString(){
-
+        File file = new File("worldBig.txt");
+        World world = Reader.loadWorld(file);
+        assertEquals(worldMap, world.worldString());
     }
 
     /**
