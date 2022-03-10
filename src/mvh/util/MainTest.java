@@ -1,6 +1,8 @@
 package mvh.util;
 
+import mvh.enums.Direction;
 import mvh.world.Entity;
+import mvh.world.Hero;
 import mvh.world.World;
 import org.junit.jupiter.api.*;
 
@@ -177,7 +179,9 @@ class MainTest {
      */
     @Test
     void heroAttackNone(){
-
+        World world = getWorld();
+        //In world, the hero is not close enough to the monster to attack it, thus expected result should be null
+        assertNull(world.getEntity(2,2).attackWhere(world.getLocal(3, 2, 2)));
     }
 
     /**
@@ -185,7 +189,10 @@ class MainTest {
      */
     @Test
     void heroAttackMonster(){
-
+        World world = getWorld();
+        world.moveEntity(0, 0, Direction.SOUTHEAST);
+        //Getting local world for the attack perspective
+        assertEquals(Direction.NORTHWEST, world.getEntity(2,2).attackWhere(world.getLocal(3, 2, 2)));
     }
 
     /**
@@ -193,7 +200,9 @@ class MainTest {
      */
     @Test
     void monsterAttackNone(){
-
+        World world = getWorld();
+        //In world, the monster is not close enough to the hero to attack it
+        assertNull(world.getEntity(0,0).attackWhere(world.getLocal(3, 0, 0)));
     }
 
     /**
@@ -201,7 +210,10 @@ class MainTest {
      */
     @Test
     void monsterAttackHero(){
-
+        World world = getWorld();
+        //Moving the hero closer to monster in our world, thus it is close enough for an attack
+        world.moveEntity(2, 2, Direction.NORTHWEST);
+        assertEquals(Direction.SOUTHEAST, world.getEntity(0,0).attackWhere(world.getLocal(3, 0, 0)));
     }
 
     /**
