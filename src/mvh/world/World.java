@@ -124,7 +124,7 @@ public class World {
                     //Can we attack this entity
                     if (canBeAttacked(row, column, attackWhere)) {
                         //Determine damage using RNG
-                        int damage = Main.random.nextInt(1, entity.weaponStrength() + 1);
+                        int damage = 1 + Main.random.nextInt(entity.weaponStrength());
                         int true_damage = Math.max(0, damage - attacked.armorStrength());
                         Menu.println(String.format("%s attacked %s for %d damage against %d defense for %d", entity.shortString(), attacked.shortString(), damage, attacked.armorStrength(), true_damage));
                         attacked.damage(true_damage);
@@ -306,6 +306,22 @@ public class World {
     }
 
     /**
+     * The rows of the world
+     * @return The rows of the world
+     */
+    public int getRows(){
+        return world.length;
+    }
+
+    /**
+     * The columns of the world
+     * @return The columns of the world
+     */
+    public int getColumns(){
+        return world[0].length;
+    }
+
+    /**
      * Creates a string that summarizes all the information of all entities within the world
      *
      * @return String that summarizes
@@ -332,8 +348,8 @@ public class World {
      */
     public String worldString(){
         StringBuilder wall = new StringBuilder();
-        int rowLength = this.world.length;
-        int columnLength = this.world[0].length;
+        int rowLength = getRows();
+        int columnLength = getColumns();
         //Added two to the length of one row, to get the top and bottom wall
         wall.append(String.valueOf(Symbol.WALL.getSymbol()).repeat(columnLength + 2));
         StringBuilder innerMap = new StringBuilder();
@@ -376,25 +392,19 @@ public class World {
     /**
      * Creates a localized view of the world with all entities
      *
-     * @param moveWorldSize the size of the local world (must be odd integer)
+     * @param size the size of the local world (must be odd integer)
      * @param row index, in row, of where the local world should be centered (looking at the 2D world)
      * @param column index, in column of where the local should be centered (looking at the 2D world)
      * @return World object that is a localized view of the overall world
      */
-    World getLocal(int moveWorldSize, int row, int column) {
+    public World getLocal(int size, int row, int column) {
         //row,column are used to indicate where the grid should be centred.
-        if(moveWorldSize % 2 != 1){
-            try {
-                throw new Exception("Invalid function parameter");
-            } catch (Exception e) {
-                System.err.println("Parameter moveWorldSize: " + moveWorldSize + " should be an odd number!");
-                e.printStackTrace();
-                System.exit(1);
-            }
+        if(size % 2 != 1){
+            throw new IllegalArgumentException("Invalid function parameter");
         }
-        World localWorld = new World(moveWorldSize, moveWorldSize);
+        World localWorld = new World(size, size);
         //Getting the amount of spaces from the entity that we are centring the world on till the end of the localized world
-        int mapDifference = Math.floorDiv(moveWorldSize, 2);
+        int mapDifference = Math.floorDiv(size, 2);
         for (int currentRow = row - mapDifference, localWorldRow = 0; currentRow <= row + mapDifference; currentRow++, localWorldRow++) {
             for (int currentColumn = column - mapDifference, localWorldColumn = 0; currentColumn <= column + mapDifference; currentColumn++, localWorldColumn++) {
                 try {
@@ -406,6 +416,10 @@ public class World {
                 //Creating walls for locations outside of world
                 catch (IndexOutOfBoundsException e) {
                     localWorld.addEntity(localWorldRow, localWorldColumn, Wall.getWall());
+                }
+                catch (Exception e){
+                    System.err.println("Error creating a local view of the world!");
+                    System.exit(1);
                 }
             }
         }
