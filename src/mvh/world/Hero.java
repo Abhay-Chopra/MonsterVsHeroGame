@@ -38,7 +38,7 @@ public final class Hero extends Entity{
      * The weapon strength of monster is from user value
      * @return The weapon strength of monster is from user value
      */
-        @Override
+    @Override
     public int weaponStrength() {
         return weaponStrength;
     }
@@ -103,13 +103,13 @@ public final class Hero extends Entity{
             }
         }
         //Handling other cases (when no monster alive)
-        Direction randomDirection = Direction.getRandomDirection();
         //Checking if hero can move North-West
         if(local.canMoveOnTopOf(heroRowLocation, heroColumnLocation, Direction.NORTHWEST)){
             return Direction.NORTHWEST;
         }
+        Direction randomDirection = Direction.getRandomDirection();
         //Checking if hero can move in some random direction
-        else if(local.canMoveOnTopOf(heroRowLocation, heroColumnLocation, randomDirection)){
+        if(local.canMoveOnTopOf(heroRowLocation, heroColumnLocation, randomDirection)){
             return randomDirection;
         }
         //When no other direction to move to, hero stays at current location

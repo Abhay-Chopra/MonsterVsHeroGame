@@ -35,6 +35,14 @@ public final class Monster extends Entity {
     }
 
     /**
+     * Gets Monster's weapon type
+     * @return The Monster's weapon type
+     */
+    public WeaponType getWeaponType() {
+        return this.weaponType;
+    }
+
+    /**
      * The weapon strength of monster is from their weapon type
      * @return The weapon strength of monster is from their weapon type
      */
@@ -104,13 +112,13 @@ public final class Monster extends Entity {
             }
         }
         //Handling other cases (when no monster alive)
-        Direction randomDirection = Direction.getRandomDirection();
         //Checking if hero can move South-East
         if(local.canMoveOnTopOf(monsterRowLocation, monsterColumnLocation, Direction.SOUTHEAST)){
             return Direction.SOUTHEAST;
         }
+        Direction randomDirection = Direction.getRandomDirection();
         //Checking if hero can move in some random direction
-        else if(local.canMoveOnTopOf(monsterRowLocation, monsterColumnLocation, randomDirection)){
+        if(local.canMoveOnTopOf(monsterRowLocation, monsterColumnLocation, randomDirection)){
             return randomDirection;
         }
         //When no other direction to move to, hero stays at current location
