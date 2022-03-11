@@ -13,7 +13,7 @@ import java.util.HashMap;
  * @author Jonathan Hudson, Abhay Chopra
  * @version 1.1
  * TA: Amir (Tutorial 06)
- * Match 8th, 2022
+ * Match 11th, 2022
  */
 public class World {
 
@@ -324,7 +324,7 @@ public class World {
     /**
      * Creates a string that summarizes all the information of all entities within the world
      *
-     * @return String that summarizes
+     * @return String that summarizes the world along with the visual representation of the world itself
      */
     public String gameString(){
         //Getting the World Map
@@ -342,7 +342,7 @@ public class World {
     }
 
     /**
-     * Creating a string that represents the current world
+     * Creating a string that represents and visualizes the current world
      *
      * @return String that contains a visualization of the world, including all entities represented by symbols
      */
@@ -405,6 +405,7 @@ public class World {
         World localWorld = new World(size, size);
         //Getting the amount of spaces from the entity that we are centring the world on till the end of the localized world
         int mapDifference = Math.floorDiv(size, 2);
+        //Looping through indexes for both the overall world and the local world
         for (int currentRow = row - mapDifference, localWorldRow = 0; currentRow <= row + mapDifference; currentRow++, localWorldRow++) {
             for (int currentColumn = column - mapDifference, localWorldColumn = 0; currentColumn <= column + mapDifference; currentColumn++, localWorldColumn++) {
                 try {
@@ -413,10 +414,11 @@ public class World {
                         localWorld.addEntity(localWorldRow, localWorldColumn, getEntity(currentRow, currentColumn));
                     }
                 }
-                //Creating walls for locations outside of world
+                //Creating walls for locations,ie, indexes outside the overall world
                 catch (IndexOutOfBoundsException e) {
                     localWorld.addEntity(localWorldRow, localWorldColumn, Wall.getWall());
                 }
+                //Having a general exception handle, just to exit safely
                 catch (Exception e){
                     System.err.println("Error creating a local view of the world!");
                     System.exit(1);

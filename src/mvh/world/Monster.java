@@ -96,7 +96,7 @@ public final class Monster extends Entity {
         //Getting monster location (local world)
         int monsterRowLocation = 2;
         int monsterColumnLocation = 2;
-        //Looping through local world to see if any alive monsters
+        //Looping through local world to see if any alive monsters, ie, attack-able monsters
         for (int row = 4; row >= 0; row--) {
             for (int column = 4; column >= 0; column--) {
                 //Checking if location is an attack-able hero, ie, an alive hero
@@ -112,7 +112,7 @@ public final class Monster extends Entity {
             }
         }
         //Handling other cases (when no monster alive)
-        //Checking if hero can move South-East
+        //Checking if hero can move default location of => South-East
         if(local.canMoveOnTopOf(monsterRowLocation, monsterColumnLocation, Direction.SOUTHEAST)){
             return Direction.SOUTHEAST;
         }
