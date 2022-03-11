@@ -1,4 +1,4 @@
-package mvh;
+package mvh.test;
 
 import mvh.enums.Direction;
 import mvh.util.Reader;
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * TA: T06(W/Amir)
  * Date: March 9th, 2022
  */
-class MainTest {
+class MvHTest {
 
     //Initializing Strings needed in tests
     String worldMap;
@@ -58,7 +58,6 @@ class MainTest {
                 Hero(6)\tF\t6\tALIVE\t3\t1
                 """;
     }
-    //TODO Ask if this is allowed
     private World getWorld(){
         File file = new File("world.txt");
         return Reader.loadWorld(file);
