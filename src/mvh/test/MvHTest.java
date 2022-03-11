@@ -82,10 +82,13 @@ class MvHTest {
     void loadWorldBasicWorld() {
         File file = new File("world.txt");
         World world = Reader.loadWorld(file);
+        //Confirming that the world is the expected size
+        int expectedRowsColumns = 3;
+        assertEquals(expectedRowsColumns, world.getRows());
+        assertEquals(expectedRowsColumns, world.getColumns());
         //Checking if the world has the correct entities (at the required locations)
         assertTrue(world.isHero(2, 2));
         assertTrue(world.isMonster(0,0));
-
     }
 
     /**
@@ -96,6 +99,11 @@ class MvHTest {
     void loadWorldBigWorld(){
         File file = new File("worldBig.txt");
         World world = Reader.loadWorld(file);
+        //Checking that the world is expected size
+        int expectedRows = 5;
+        int expectedColumns = 4;
+        assertEquals(expectedRows, world.getRows());
+        assertEquals(expectedColumns, world.getColumns());
         //Checking if the world has the correct hero's (at the required locations)
         assertTrue(world.isHero(4, 1));
         assertTrue(world.isHero(4, 2));
@@ -135,6 +143,8 @@ class MvHTest {
         World local3x3View = world.getLocal(3, 0,0);
         //Checking to confirm that our local view has been correctly loaded
         assertTrue(local3x3View.isMonster(1,1));
+        //Confirming we have the same entity in the local view
+        assertSame(world.getEntity(0,0), local3x3View.getEntity(1,1));
         //Checking to make sure there are walls around the monster
         assertFalse(local3x3View.canMoveOnTopOf(0,0));
         assertFalse(local3x3View.canMoveOnTopOf(0,1));
@@ -142,7 +152,7 @@ class MvHTest {
     }
 
     /**
-     * Creating a 5x5 localized world (from big world file)
+     * Creating a 5x5 localized world (from big world file) and confirming we get an accurate subview of the overall world
      */
     @Test
     void getLocal5x5(){
@@ -151,6 +161,8 @@ class MvHTest {
         World local5x5View = world.getLocal(5, 1,2);
         //Checking to confirm that our local view has been correctly loaded
         assertTrue(local5x5View.isMonster(2, 2));
+        //Confirming we have the same entity in the local view
+        assertSame(world.getEntity(1,2), local5x5View.getEntity(2,2));
         //Checking for entities around the centred entity (and if they match with actual world)
         assertTrue(local5x5View.isMonster(1,2));
         assertTrue(local5x5View.isMonster(1,0));
@@ -158,7 +170,8 @@ class MvHTest {
     }
 
     /**
-     * Creating a 5x5 localized world focused on different entity (thus the "new entity" within test name)
+     * Creating a 5x5 localized world focused on different entity (thus the "new entity" within test name) from the world
+     * generated through worldBig.txt
      */
     @Test
     void getLocalNewEntity(){
@@ -176,7 +189,7 @@ class MvHTest {
     }
 
     /**
-     * Test where given a world where hero has no available attacking positions
+     * Test case for attackWhere() for Hero.java when given a world where hero has no available attacking positions
      */
     @Test
     void heroAttackNone(){
@@ -186,7 +199,7 @@ class MvHTest {
     }
 
     /**
-     * Test where hero should be able to attack a monster that is in its direct vicinity
+     * Test case for attackWhere() for Hero.java where hero should be able to attack a monster that is in its direct vicinity
      */
     @Test
     void heroAttackMonster(){
@@ -197,7 +210,7 @@ class MvHTest {
     }
 
     /**
-     * Test where given a world where monster has no available attacking positions
+     * Test where given a world in which monster has no available attacking positions
      */
     @Test
     void monsterAttackNone(){
@@ -228,7 +241,7 @@ class MvHTest {
     }
 
     /**
-     * Test for chooseMove() where the hero has valid positions to move to, but some are blocked
+     * Test for chooseMove() where the hero has valid positions to move to, but some are blocked directly next to the hero
      */
     @Test
     void heroBlocked(){
@@ -251,7 +264,7 @@ class MvHTest {
     }
 
     /**
-     * Test for chooseMove() where the monster has some positions blocked
+     * Test for chooseMove() where the monster has some positions blocked directly next to it
      */
     @Test
     void monsterBlocked(){
