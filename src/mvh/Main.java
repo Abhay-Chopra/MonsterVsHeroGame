@@ -5,6 +5,7 @@ import mvh.world.World;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -43,6 +44,7 @@ public final class Main {
 
         //Set up Menu with logger and read world from file
         Menu.setup(fileLog);
+        Menu.println("Arguments: "+ Arrays.toString(args));
         World world = Reader.loadWorld(fileWorld);
 
         //Run simulation

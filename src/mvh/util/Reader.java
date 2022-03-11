@@ -23,6 +23,7 @@ public final class Reader {
      */
     public static World loadWorld(File fileWorld){
         World world = null;
+        //reconfirming that file can be accessed
         if(fileWorld.isFile() && fileWorld.canRead() && fileWorld.exists()){
             //Try and Catch Block for reading from file (With-resources)
             try(FileReader fileReader = new FileReader(fileWorld);
@@ -37,12 +38,11 @@ public final class Reader {
                 //Looping for "following" lines
                 for(int currentRow = 0; currentRow < rowCount; currentRow++){
                     for (int currentColumn = 0; currentColumn < columnCount; currentColumn++) {
-                        //TODO Ask about checking if line is null
                         //Conditional checks that there is content within the line
                         if(line != null){
                             //Reading and splitting a line
                             String[] lineInfo = line.split(",");
-                            //Initializing vars
+                            //Initializing vars for current line
                             int row = 0;
                             int column = 0;
                             try{
@@ -55,16 +55,13 @@ public final class Reader {
                                 }
                             }catch (ArrayIndexOutOfBoundsException e){
                                 System.err.println("Invalid entries in world file!");
-                                e.printStackTrace();
                                 System.exit(1);
                             } catch (Exception e) {
-                                //TODO Ask about exception types
-                                System.err.println("Skipped a row or column within world file!");
-                                e.printStackTrace();
+                                System.err.println("Invalid entries within world file!");
                                 System.exit(1);
                             }
                             //Conditional for handling non-floor entities in row, column
-                            if(lineInfo.length > 2)
+                            if(lineInfo.length > 2 && lineInfo.length <= 7)
                             {
                                 //getting health and symbol from the passed line
                                 int entityHealth = Integer.parseInt(lineInfo[4]);
@@ -87,17 +84,22 @@ public final class Reader {
                                     //Adding entity onto the world
                                     world.addEntity(row, column, hero);
                                 }
+                            } else if (lineInfo.length > 7){
+                                System.err.println("Too many values in line of provided world file!");
+                                System.exit(1);
                             }
                             line = bufferedReader.readLine();
                         }
                     }
                 }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+            }catch (NumberFormatException e){
+                System.err.println("Couldn't read from file! Missing world row or colum size!");
+                System.exit(1);
+            }
+            catch (FileNotFoundException e) {
                 System.err.println("Could not find file: " + fileWorld.getAbsolutePath());
                 System.exit(1);
             } catch (IOException e) {
-                e.printStackTrace();
                 System.err.println("Could not close file: " + fileWorld.getAbsolutePath());
                 System.exit(1);
             }
