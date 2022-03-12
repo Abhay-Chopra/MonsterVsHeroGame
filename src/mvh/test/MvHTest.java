@@ -1,14 +1,17 @@
 package mvh.test;
 
+import mvh.Main;
 import mvh.enums.Direction;
 import mvh.util.Reader;
 import mvh.world.Entity;
+import mvh.world.Hero;
 import mvh.world.World;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -112,6 +115,18 @@ class MvHTest {
         assertTrue(world.isMonster(0,0));
         assertTrue(world.isMonster(0,2));
         assertTrue(world.isMonster(1,2));
+    }
+
+    /**
+     * Testing load world but via comparing string representation (different method but same test case essentially)
+     */
+    @Test
+    void loadWorld(){
+        /*Justification to using toString: gameString is already a function that is being tested thus it is easy to use it
+          within testing */
+        File file = new File("worldBig.txt");
+        World world = Reader.loadWorld(file);
+        assertEquals(worldString, world.toString());
     }
 
     /**
@@ -275,5 +290,22 @@ class MvHTest {
         world.moveEntity(0,2, Direction.WEST);
 
         assertEquals(Direction.SOUTHEAST, world.getEntity(0,0).chooseMove(world.getLocal(5, 0,0)));
+    }
+    /**
+     * Test for chooseMove() where the monster has all location blocked in its direct vicinity, ie, monster should stay
+     */
+    @Test
+    void monsterStay(){
+        World world = getWorldBig();
+        //Moving entities so that entity at the top left of the world has some paths obstructed
+        world.moveEntity(1,2, Direction.WEST);
+        world.moveEntity(1,1, Direction.WEST);
+        world.moveEntity(0,2, Direction.WEST);
+        //Adding entity so that the monster is fully blocked in
+        Hero hero = new Hero(10, 'H', 3, 1);
+        world.addEntity(1,1, hero);
+        //Instantiating our random var in main so our random number generator works
+        Main.random = new Random(12345);
+        assertEquals(Direction.STAY, world.getEntity(0,0).chooseMove(world.getLocal(5,0,0)));
     }
 }
